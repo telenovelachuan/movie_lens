@@ -1,0 +1,5 @@
+1. add the average rating and number of rating for each movie
+2. add tag frequency for every tag, then calculate the average tag frequency for each movie
+3. add number of tags for each movie
+4. add reliability of ratings and tags(use std to see if ratings are reliable)
+5. split and categorize genres(something like "multiple-hot" encoding)

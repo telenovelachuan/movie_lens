@@ -1,0 +1,4 @@
+1. for ratings, parse timestamp into date format
+2. for movies, extract year from movie title
+3. standardize all numeric data using StandardScaler
+4. shuffling data and split into training dataset and testing dataset

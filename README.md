@@ -2,9 +2,9 @@ A data science project on the MovieLens dataset to explore the combination of fe
 
 # Feature explorative ideas
 - add average rating and rating count for each movie
-- add tag frequency for every tag
+- add tag frequency for every tag, then calculate the average tag frequency for each movie
 - add number of tags for each movie
-- add reliability of ratings and tags
+- add reliability of ratings and tags(use std to see if ratings are reliable)
 - split and categorize genres(something like "multiple-hot" encoding)
 
 # Data preprocessing
