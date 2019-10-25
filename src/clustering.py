@@ -12,6 +12,7 @@ movies = pd.read_csv('../data/processed/movies.csv')
 # remove outliers
 movies = movies[movies['#_rating'] > 10]
 print movies
+movies.to_csv("../data/processed/movies.csv")
 
 # standardization
 columns_to_drop = ["movie_id", "title", "genres"]
@@ -31,21 +32,27 @@ print "training_set:{}".format(training_set)
 test_set = scaled_features_df[split_point:]
 print "test_set:{}".format(test_set)
 print "test_set.as_matrix:{}".format(test_set.as_matrix())
+test_set.to_csv("../data/processed/test_set.csv")
 
 '''
 NearestNeighbors
 '''
-# from sklearn.neighbors import NearestNeighbors
-# print "begin to train NearestNeighbors..."
-# nbrs = NearestNeighbors(n_neighbors=5, algorithm='auto').fit(training_set)
-# print "training finished"
-# distances, indices = nbrs.kneighbors([test_set.as_matrix()[0]])
-# print "distances:{}".format(distances)
-# recommended_movies = []
-# print "indices:{}".format(indices)
-# for r in indices:
-#     recommended_movies.append(movies.iloc[r].index)
-# print "recommended movies by NearestNeighbors:{}".format(recommended_movies)
+from sklearn.neighbors import NearestNeighbors
+print "begin to train NearestNeighbors..."
+nbrs = NearestNeighbors(n_neighbors=5, algorithm='auto').fit(training_set)
+print "training finished"
+distances, indices = nbrs.kneighbors([test_set.as_matrix()[0]])
+print "distances:{}".format(distances)
+recommended_movies = []
+print "indices:{}".format(indices)
+for r in indices:
+    recommended_movies.append(movies.iloc[r].index)
+print "recommended movies by NearestNeighbors:{}".format(recommended_movies)
+
+
+'''
+Explore Silhouette score using KMeans to determine optimal number of clusters
+'''
 
 
 def plot_silhouette_score(X):
@@ -116,8 +123,10 @@ def plot_silhouette_histogram(X):
 
     plt.show()
 
-# plot_silhouette_score(movies)
-# plot_silhouette_histogram(movies)
+
+plot_silhouette_score(movies)
+plot_silhouette_histogram(movies)
+
 
 '''
 KNeighborsClassifier
@@ -136,6 +145,7 @@ for r in indices:
     recommended_movies.append(movies.iloc[r].index)
 print "recommended movies by KNeighborsClassifier:{}".format(recommended_movies)
 
+
 '''
 Clustering algorithms
 '''
@@ -146,32 +156,28 @@ def count_clustered_labels(labels_, algorithm_name):
     print "clustering result by {}\n{}".format(algorithm_name, Counter(labels_))
 
 # DBSCAN
-# from sklearn.cluster import DBSCAN
-# dbscan = DBSCAN(eps=11, min_samples=5)
-# dbscan.fit(movies.values)
-# dump(dbscan, '../models/dbscan.joblib')
-# print "saving model finished"
-# count_clustered_labels(dbscan.labels_, "DBSCAN")
+from sklearn.cluster import DBSCAN
+dbscan = DBSCAN(eps=11, min_samples=5)
+dbscan.fit(movies.values)
+dump(dbscan, '../models/dbscan.joblib')
+print "saving model finished"
+count_clustered_labels(dbscan.labels_, "DBSCAN")
 
 # Mean Shift
-# from sklearn.cluster import MeanShift
-# print "training MeanShift..."
-# ms = MeanShift(cluster_all=False)
-# ms.fit(movies.values)
-# print "training finished"
-# dump(ms, '../models/mean_shift.joblib')
-# print "saving model finished"
-# count_clustered_labels(ms.labels_, "Mean Shift")
+from sklearn.cluster import MeanShift
+print "training MeanShift..."
+ms = MeanShift(cluster_all=False)
+ms.fit(movies.values)
+print "training finished"
+dump(ms, '../models/mean_shift.joblib')
+print "saving model finished"
+count_clustered_labels(ms.labels_, "Mean Shift")
 
 # Hierarchical Clustering
-# from sklearn.cluster import AgglomerativeClustering
-# agc = AgglomerativeClustering(affinity='euclidean', linkage='ward')
-# agc.fit(movies.values)
-# dump(agc, '../models/ward_hierarchical.joblib')
-# print "saving model finished"
-# count_clustered_labels(agc.labels_, "Ward hierarchical clustering")
-
-
-
-
+from sklearn.cluster import AgglomerativeClustering
+agc = AgglomerativeClustering(affinity='euclidean', linkage='ward')
+agc.fit(movies.values)
+dump(agc, '../models/ward_hierarchical.joblib')
+print "saving model finished"
+count_clustered_labels(agc.labels_, "Ward hierarchical clustering")
 
